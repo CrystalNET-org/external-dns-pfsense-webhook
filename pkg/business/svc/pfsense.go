@@ -271,6 +271,10 @@ type unboundStruct struct {
 	Unbound unbound `xml:"unbound"`
 }
 
+// Full field list cross-checked against pfSense's own source
+// (services_unbound.php + services_unbound_advanced.php on master) rather
+// than adding fields one at a time as each new one surfaces in production.
+//
 //nolint:revive,staticcheck
 type unbound struct {
 	Enable                    string `xml:"enable"`
@@ -302,6 +306,27 @@ type unbound struct {
 	LogVerbosity              string `xml:"log_verbosity"`
 	Forwarding                string `xml:"forwarding"`
 	Prefetch                  string `xml:"prefetch"`
+	Prefetchkey               string `xml:"prefetchkey"`
+	Enablessl                 string `xml:"enablessl"`
+	ForwardTLSUpstream        string `xml:"forward_tls_upstream"`
+	Python                    string `xml:"python"`
+	PythonOrder               string `xml:"python_order"`
+	PythonScript              string `xml:"python_script"`
+	Regdhcp                   string `xml:"regdhcp"`
+	Regdhcpstatic             string `xml:"regdhcpstatic"`
+	Regovpnclients            string `xml:"regovpnclients"`
+	Strictout                 string `xml:"strictout"`
+	Aggressivensec            string `xml:"aggressivensec"`
+	AllowDNS64ForLocalhost    string `xml:"allow_dns64_for_localhost"`
+	DisableAutoAddedACL       string `xml:"disable_auto_added_access_control"`
+	DisableAutoAddedHosts     string `xml:"disable_auto_added_host_entries"`
+	DNS64Enable               string `xml:"dns64_enable"`
+	DNS64Prefix               string `xml:"dns64_prefix"`
+	Dnsrecordcache            string `xml:"dnsrecordcache"`
+	SockQueueTimeout          string `xml:"sock_queue_timeout"`
+	UseCaps                   string `xml:"use_caps"`
+	QnameMinimisation         string `xml:"qname-minimisation"`
+	QnameMinimisationStrict   string `xml:"qname-minimisation-strict"`
 }
 
 //nolint:revive,staticcheck
