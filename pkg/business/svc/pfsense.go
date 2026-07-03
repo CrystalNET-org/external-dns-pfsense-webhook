@@ -209,20 +209,35 @@ func (s *pfsenseService) hostToEndpoint(host host) (UnboundEndpoint, error) {
 	var providerSpecific map[string]string
 
 	if host.Descr != "" {
-		decoded, err := base64.StdEncoding.DecodeString(host.Descr)
-		if err != nil {
-			slog.Warn("failed to decode base64 description", "descr", host.Descr, "dnsName", dnsName, "error", err)
+		var endpoint UnboundEndpoint
+		var jsonPayload []byte
+
+		decoded, base64Err := base64.StdEncoding.DecodeString(host.Descr)
+		if base64Err == nil {
+			jsonPayload = decoded
 		} else {
-			var endpoint UnboundEndpoint
-			if err := json.Unmarshal(decoded, &endpoint); err != nil {
-				return UnboundEndpoint{}, fmt.Errorf("failed to unmarshal description %+v to endpoint; %w", host.Descr, err)
-			}
+			// not base64 - the entry may still have been hand-authored as
+			// plain (unencoded) JSON, so give that a chance too before
+			// concluding it's genuinely unmanaged/foreign.
+			jsonPayload = []byte(host.Descr)
+		}
+		jsonErr := json.Unmarshal(jsonPayload, &endpoint)
+
+		switch {
+		case base64Err == nil && jsonErr != nil:
+			return UnboundEndpoint{}, fmt.Errorf("failed to unmarshal description %+v to endpoint; %w", host.Descr, jsonErr)
+		case base64Err == nil || jsonErr == nil:
 			if endpoint.RecordType != "" {
 				recordType = endpoint.RecordType
 			}
 			targets = endpoint.Targets
 			labels = endpoint.Labels
 			providerSpecific = endpoint.ProviderSpecific
+		default:
+			// neither base64+JSON nor plain JSON - this is a host override
+			// not managed by external-dns (e.g. a hand-written note like
+			// "created by kpc - do not edit"), which is expected and fine.
+			slog.Warn("description is neither base64-encoded nor plain JSON, treating as unmanaged", "descr", host.Descr, "dnsName", dnsName, "base64Error", base64Err, "jsonError", jsonErr)
 		}
 	}
 
