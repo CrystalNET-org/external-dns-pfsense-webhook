@@ -43,16 +43,16 @@ assemble-multiplatform:
 build: assemble verify
 
 TAG ?= latest
-IMAGE ?= ghcr.io/psych0d0g/external-dns-pfsense-webhook
+IMAGE ?= ghcr.io/crystalnet-org/external-dns-pfsense-webhook
 docker:
 	docker buildx build \
       --platform linux/amd64,linux/arm64 \
       --push --pull --progress=plain \
       --tag "$(IMAGE):$(TAG)" \
-      --label 'org.opencontainers.image.source=https://github.com/psych0d0g/external-dns-pfsense-webhook' \
+      --label 'org.opencontainers.image.source=https://github.com/CrystalNET-org/external-dns-pfsense-webhook' \
       --label 'org.opencontainers.image.description=external-dns-pfsense-webhook' \
       --label 'org.opencontainers.image.licenses=Apache-2.0' \
-      --annotation 'org.opencontainers.image.source=https://github.com/psych0d0g/external-dns-pfsense-webhook' \
+      --annotation 'org.opencontainers.image.source=https://github.com/CrystalNET-org/external-dns-pfsense-webhook' \
       --annotation 'org.opencontainers.image.description=external-dns-pfsense-webhook' \
       --annotation 'org.opencontainers.image.licenses=Apache-2.0' \
       .

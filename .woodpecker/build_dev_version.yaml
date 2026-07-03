@@ -1,0 +1,23 @@
+steps:
+  docker-build-dev:
+    image: woodpeckerci/plugin-docker-buildx:6.0.3
+    settings:
+      debug: true
+      repo: harbor.crystalnet.org/library/external-dns-pfsense-webhook,ghcr.io/crystalnet-org/external-dns-pfsense-webhook
+      logins:
+      - registry: https://harbor.crystalnet.org/
+        username: robot$library+woodpecker
+        password:
+          from_secret: harbor_token
+      - registry: https://ghcr.io/
+        username: psych0d0g
+        password:
+          from_secret: GITHUB_TOKEN
+      registry: harbor.crystalnet.org
+      tags: dev
+      dockerfile: Dockerfile
+      platforms: linux/amd64,linux/arm64
+      dry_run: false
+when:
+  branch: ${CI_REPO_DEFAULT_BRANCH}
+  event: push
