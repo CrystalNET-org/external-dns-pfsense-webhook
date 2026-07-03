@@ -301,6 +301,7 @@ type unbound struct {
 	UnwantedReplyThreshold    string `xml:"unwanted_reply_threshold"`
 	LogVerbosity              string `xml:"log_verbosity"`
 	Forwarding                string `xml:"forwarding"`
+	Prefetch                  string `xml:"prefetch"`
 }
 
 //nolint:revive,staticcheck

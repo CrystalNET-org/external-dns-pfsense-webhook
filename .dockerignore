@@ -1,2 +1,5 @@
-*
-!/bin/app-*
+.git
+bin
+e2e
+testdata
+*.md
