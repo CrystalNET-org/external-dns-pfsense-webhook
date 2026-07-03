@@ -277,56 +277,57 @@ type unboundStruct struct {
 //
 //nolint:revive,staticcheck
 type unbound struct {
-	Enable                    string `xml:"enable"`
-	Dnssec                    string `xml:"dnssec"`
-	ActiveInterface           string `xml:"active_interface"`
-	OutgoingInterface         string `xml:"outgoing_interface"`
-	CustomOptions             string `xml:"custom_options"`
-	Hideidentity              string `xml:"hideidentity"`
-	Hideversion               string `xml:"hideversion"`
-	Dnssecstripped            string `xml:"dnssecstripped"`
-	Hosts                     []host `xml:"hosts"`
-	Acls                      []acl  `xml:"acls"`
-	Port                      string `xml:"port"`
-	Tlsport                   string `xml:"tlsport"`
-	Sslcertref                string `xml:"sslcertref"`
-	SystemDomainLocalZoneType string `xml:"system_domain_local_zone_type"`
-	Msgcachesize              string `xml:"msgcachesize"`
-	OutgoingNumTcp            string `xml:"outgoing_num_tcp"`
-	IncomingNumTcp            string `xml:"incoming_num_tcp"`
-	EdnsBufferSize            string `xml:"edns_buffer_size"`
-	NumQueriesPerThread       string `xml:"num_queries_per_thread"`
-	JostleTimeout             string `xml:"jostle_timeout"`
-	CacheMaxTtl               string `xml:"cache_max_ttl"`
-	CacheMinTtl               string `xml:"cache_min_ttl"`
-	InfraKeepProbing          string `xml:"infra_keep_probing"`
-	InfraHostTtl              string `xml:"infra_host_ttl"`
-	InfraCacheNumhosts        string `xml:"infra_cache_numhosts"`
-	UnwantedReplyThreshold    string `xml:"unwanted_reply_threshold"`
-	LogVerbosity              string `xml:"log_verbosity"`
-	Forwarding                string `xml:"forwarding"`
-	Prefetch                  string `xml:"prefetch"`
-	Prefetchkey               string `xml:"prefetchkey"`
-	Enablessl                 string `xml:"enablessl"`
-	ForwardTLSUpstream        string `xml:"forward_tls_upstream"`
-	Python                    string `xml:"python"`
-	PythonOrder               string `xml:"python_order"`
-	PythonScript              string `xml:"python_script"`
-	Regdhcp                   string `xml:"regdhcp"`
-	Regdhcpstatic             string `xml:"regdhcpstatic"`
-	Regovpnclients            string `xml:"regovpnclients"`
-	Strictout                 string `xml:"strictout"`
-	Aggressivensec            string `xml:"aggressivensec"`
-	AllowDNS64ForLocalhost    string `xml:"allow_dns64_for_localhost"`
-	DisableAutoAddedACL       string `xml:"disable_auto_added_access_control"`
-	DisableAutoAddedHosts     string `xml:"disable_auto_added_host_entries"`
-	DNS64Enable               string `xml:"dns64_enable"`
-	DNS64Prefix               string `xml:"dns64_prefix"`
-	Dnsrecordcache            string `xml:"dnsrecordcache"`
-	SockQueueTimeout          string `xml:"sock_queue_timeout"`
-	UseCaps                   string `xml:"use_caps"`
-	QnameMinimisation         string `xml:"qname-minimisation"`
-	QnameMinimisationStrict   string `xml:"qname-minimisation-strict"`
+	Enable                    string           `xml:"enable"`
+	Dnssec                    string           `xml:"dnssec"`
+	ActiveInterface           string           `xml:"active_interface"`
+	OutgoingInterface         string           `xml:"outgoing_interface"`
+	CustomOptions             string           `xml:"custom_options"`
+	Hideidentity              string           `xml:"hideidentity"`
+	Hideversion               string           `xml:"hideversion"`
+	Dnssecstripped            string           `xml:"dnssecstripped"`
+	Hosts                     []host           `xml:"hosts"`
+	Acls                      []acl            `xml:"acls"`
+	Domainoverrides           []domainoverride `xml:"domainoverrides"`
+	Port                      string           `xml:"port"`
+	Tlsport                   string           `xml:"tlsport"`
+	Sslcertref                string           `xml:"sslcertref"`
+	SystemDomainLocalZoneType string           `xml:"system_domain_local_zone_type"`
+	Msgcachesize              string           `xml:"msgcachesize"`
+	OutgoingNumTcp            string           `xml:"outgoing_num_tcp"`
+	IncomingNumTcp            string           `xml:"incoming_num_tcp"`
+	EdnsBufferSize            string           `xml:"edns_buffer_size"`
+	NumQueriesPerThread       string           `xml:"num_queries_per_thread"`
+	JostleTimeout             string           `xml:"jostle_timeout"`
+	CacheMaxTtl               string           `xml:"cache_max_ttl"`
+	CacheMinTtl               string           `xml:"cache_min_ttl"`
+	InfraKeepProbing          string           `xml:"infra_keep_probing"`
+	InfraHostTtl              string           `xml:"infra_host_ttl"`
+	InfraCacheNumhosts        string           `xml:"infra_cache_numhosts"`
+	UnwantedReplyThreshold    string           `xml:"unwanted_reply_threshold"`
+	LogVerbosity              string           `xml:"log_verbosity"`
+	Forwarding                string           `xml:"forwarding"`
+	Prefetch                  string           `xml:"prefetch"`
+	Prefetchkey               string           `xml:"prefetchkey"`
+	Enablessl                 string           `xml:"enablessl"`
+	ForwardTLSUpstream        string           `xml:"forward_tls_upstream"`
+	Python                    string           `xml:"python"`
+	PythonOrder               string           `xml:"python_order"`
+	PythonScript              string           `xml:"python_script"`
+	Regdhcp                   string           `xml:"regdhcp"`
+	Regdhcpstatic             string           `xml:"regdhcpstatic"`
+	Regovpnclients            string           `xml:"regovpnclients"`
+	Strictout                 string           `xml:"strictout"`
+	Aggressivensec            string           `xml:"aggressivensec"`
+	AllowDNS64ForLocalhost    string           `xml:"allow_dns64_for_localhost"`
+	DisableAutoAddedACL       string           `xml:"disable_auto_added_access_control"`
+	DisableAutoAddedHosts     string           `xml:"disable_auto_added_host_entries"`
+	DNS64Enable               string           `xml:"dns64_enable"`
+	DNS64Prefix               string           `xml:"dns64_prefix"`
+	Dnsrecordcache            string           `xml:"dnsrecordcache"`
+	SockQueueTimeout          string           `xml:"sock_queue_timeout"`
+	UseCaps                   string           `xml:"use_caps"`
+	QnameMinimisation         string           `xml:"qname-minimisation"`
+	QnameMinimisationStrict   string           `xml:"qname-minimisation-strict"`
 }
 
 //nolint:revive,staticcheck
@@ -336,6 +337,15 @@ type host struct {
 	Ip      string `xml:"ip"`
 	Descr   string `xml:"descr"`
 	Aliases string `xml:"aliases"`
+}
+
+//nolint:revive,staticcheck
+type domainoverride struct {
+	Domain             string `xml:"domain"`
+	Ip                 string `xml:"ip"`
+	Descr              string `xml:"descr"`
+	TLSHostname        string `xml:"tls_hostname"`
+	ForwardTLSUpstream string `xml:"forward_tls_upstream"`
 }
 
 //nolint:revive,staticcheck
