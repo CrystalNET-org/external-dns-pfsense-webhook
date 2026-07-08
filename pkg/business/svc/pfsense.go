@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"net/netip"
 	"slices"
 	"strings"
 
@@ -169,8 +170,8 @@ func (s *pfsenseService) execPhp(code string) error {
 }
 
 func (s *pfsenseService) endpointToHost(endpoint UnboundEndpoint) (host, error) {
-	if !slices.Contains([]string{"A", "TXT"}, endpoint.RecordType) {
-		return host{}, fmt.Errorf("only A and TXT record types are supported, got %+v", endpoint.RecordType)
+	if !slices.Contains([]string{"A", "AAAA", "TXT"}, endpoint.RecordType) {
+		return host{}, fmt.Errorf("only A, AAAA and TXT record types are supported, got %+v", endpoint.RecordType)
 	}
 
 	hostname, domain, err := s.explodeHostName(endpoint.DNSName)
@@ -178,12 +179,16 @@ func (s *pfsenseService) endpointToHost(endpoint UnboundEndpoint) (host, error) 
 		return host{}, fmt.Errorf("failed to explode dns name %+v; %w", endpoint.DNSName, err)
 	}
 
-	if endpoint.RecordType == "A" && len(endpoint.Targets) != 1 {
-		return host{}, fmt.Errorf("only one target is supported for A record, got %+v; dns name: %s", endpoint.Targets, endpoint.DNSName)
+	isAddressRecord := endpoint.RecordType == "A" || endpoint.RecordType == "AAAA"
+	if isAddressRecord && len(endpoint.Targets) != 1 {
+		return host{}, fmt.Errorf("only one target is supported for %s record, got %+v; dns name: %s", endpoint.RecordType, endpoint.Targets, endpoint.DNSName)
 	}
 
-	ip := "127.0.0.1" // fake IP for non-A records
-	if endpoint.RecordType == "A" {
+	// pfSense's Unbound host override schema has a single Ip field for
+	// either address family - Unbound infers A vs AAAA from the address
+	// format itself, there's no separate ipv6 field to populate.
+	ip := "127.0.0.1" // fake IP for non-address records (e.g. TXT)
+	if isAddressRecord {
 		ip = endpoint.Targets[0]
 	}
 
@@ -203,7 +208,14 @@ func (s *pfsenseService) hostToEndpoint(host host) (UnboundEndpoint, error) {
 		return UnboundEndpoint{}, fmt.Errorf("failed to build dns name from host %+v; %w", host, err)
 	}
 
+	// default (used when there's no JSON description to recover the real
+	// record type from, e.g. a hand-authored pfSense host override) -
+	// infer from the address family, since Unbound itself doesn't
+	// distinguish A from AAAA via a separate field either.
 	recordType := "A"
+	if parsed, err := netip.ParseAddr(host.Ip); err == nil && parsed.Is6() {
+		recordType = "AAAA"
+	}
 	targets := []string{host.Ip}
 	var labels map[string]string
 	var providerSpecific map[string]string
